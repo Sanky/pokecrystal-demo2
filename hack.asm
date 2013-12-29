@@ -416,7 +416,7 @@ WriteMenuSprite:
 	rla
 	add $f0
 	ld [hli], a
-	ld a, $08
+	ld a, $00
 	ld [hli], a
 	
 	call GetMenuSpriteY
@@ -431,7 +431,7 @@ WriteMenuSprite:
 	rla
 	add $f1
 	ld [hli], a
-	ld a, $08
+	ld a, $00
 	ld [hli], a
 	
 	call GetMenuSpriteY
@@ -447,7 +447,7 @@ WriteMenuSprite:
 	rla
 	add $f2
 	ld [hli], a
-	ld a, $08
+	ld a, $00
 	ld [hli], a
 	
 	call GetMenuSpriteY
@@ -463,7 +463,7 @@ WriteMenuSprite:
 	rla
 	add $f3
 	ld [hli], a
-	ld a, $08
+	ld a, $00
 	ld [hli], a
 	ret
 
@@ -525,11 +525,11 @@ LoadMenuSprites:
     ld hl, $8f00
     ld bc, (BANK(MenuSprites)<<8)+$10
 	
-    ld a, 1
-    ld [rVBK], a
+    ;ld a, 1
+    ;ld [rVBK], a
     call Request2bpp
-    ld a, 0
-    ld [rVBK], a
+    ;ld a, 0
+    ;ld [rVBK], a
     
     ret
 
@@ -559,13 +559,19 @@ NewMenu:
 	ld a, $a0
 	ld [$ffbd], a ; numsprites
 	
-	call LoadMenuSprites
-	call ResetWindow
+	;call ResetWindow
 	;callba Function6454
+
+	; these are from resetwindow
+	call Function1fbf
+	callab Function6454
+	callab Function2e20
+	callab Function64bf ; load font, setup window
 	
-	call Function2e31
-	call Function2e20
+	;call Function2e31
+	;call Function2e20
 	
+	call LoadMenuSprites
 	
 	;ld hl, TileMap
 	;ld b, $4
@@ -709,6 +715,8 @@ MenuActionPointers:
 	dw NewMenuSave
 
 NewMenuPokemon:
+	call FadeToMenu
+	callab Function64bf ; load font, setup window
 	ld a, [PartyCount]
 	and a
 	jr z, .return
@@ -720,6 +728,7 @@ NewMenuPokemon:
 
 NewMenuBag:
 	call FadeToMenu
+	callab Function64bf ; load font, setup window
 	callba Function10000
 	ld a, [$cf66]
 	and a
@@ -747,9 +756,11 @@ NewMenuProfile:
 	ret
 
 NewMenuSave:
+	callab Function64bf ; load font, setup window
 	call Function2879
 	callba Function14a1a
 	jr nc, .asm_12919
+	call LoadMenuSprites
 	ld a, 0
 	ret
 
