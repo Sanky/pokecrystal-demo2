@@ -8911,7 +8911,8 @@ StartingArea_SecondMapHeader:
 	dw StartingArea_MapEventHeader
 
 	; connections
-	db 0
+	db 1
+	connect_east GROUP_STARTING_AREA_EAST, MAP_STARTING_AREA_EAST, StartingAreaEast_BlockData
 
 StartingAreaEast_SecondMapHeader:
 	; border block
@@ -8930,5 +8931,6 @@ StartingAreaEast_SecondMapHeader:
 	dw StartingAreaEast_MapEventHeader
 
 	; connections
-	db 0
+	db 1
+	connect_west GROUP_STARTING_AREA, MAP_STARTING_AREA, StartingArea_BlockData
 
